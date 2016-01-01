@@ -5,8 +5,11 @@ public class TableViewController: UIViewController {
 
     // MARK: - Properties
 
+    /// Set UITableViewStyle in IB
+    @IBInspectable var grouped: Bool = false
+
     /// Returns the table view managed by the controller object.
-    public let tableView: UITableView
+    public var tableView: UITableView!
 
     /// A Boolean value indicating if the controller clears the selection when the table appears.
     ///
@@ -40,7 +43,7 @@ public class TableViewController: UIViewController {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
 
     public convenience init() {
@@ -51,6 +54,11 @@ public class TableViewController: UIViewController {
     // MARK: - UIViewController
 
     public override func loadView() {
+        if tableView == nil {
+            let style: UITableViewStyle = grouped ? .Grouped : .Plain
+            tableView = UITableView(frame: .zero, style: style)
+            dataSource.tableView = tableView
+        }
         tableView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         view = tableView
     }
