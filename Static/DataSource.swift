@@ -215,10 +215,13 @@ extension DataSource: UITableViewDataSource {
         return sectionForIndex(section)?.footer?.viewHeight ?? UITableViewAutomaticDimension
     }
 
+    #if os(iOS)
     public func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return rowForIndexPath(indexPath)?.canEdit ?? false
     }
+    #endif
 
+    #if os(iOS)
     public func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         return rowForIndexPath(indexPath)?.editActions.map {
             action in
@@ -240,6 +243,7 @@ extension DataSource: UITableViewDataSource {
             return rowAction
         }
     }
+    #endif
 
     public func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
         guard let sectionIndexTitles = sectionIndexTitles where sectionIndexTitles.count >= sections.count else { return nil }

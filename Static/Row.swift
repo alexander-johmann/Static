@@ -30,12 +30,20 @@ public struct Row: Hashable, Equatable {
 
         /// Table view cell accessory type
         public var type: UITableViewCellAccessoryType {
+            #if os(tvOS)
+            switch self {
+            case DisclosureIndicator: return .DisclosureIndicator
+            case Checkmark: return .Checkmark
+            default: return .None
+            }
+            #else
             switch self {
             case DisclosureIndicator: return .DisclosureIndicator
             case DetailDisclosureButton(_): return .DetailDisclosureButton
             case Checkmark: return .Checkmark
             case DetailButton(_): return .DetailButton
             default: return .None
+            #endif
             }
         }
 
@@ -60,6 +68,7 @@ public struct Row: Hashable, Equatable {
     public typealias Context = [String: Any]
 
     /// Representation of an editing action, when swiping to edit a cell.
+    #if os(iOS)
     public struct EditAction {
         /// Title of the action's button.
         public let title: String
@@ -84,6 +93,7 @@ public struct Row: Hashable, Equatable {
             self.selection = selection
         }
     }
+    #endif
 
     // MARK: - Properties
 
@@ -111,12 +121,14 @@ public struct Row: Hashable, Equatable {
     /// Additional information for the row.
     public var context: Context?
     
+    #if os(iOS)
     /// Actions to show when swiping the cell, such as Delete.
     public var editActions: [EditAction]
 
     var canEdit: Bool {
         return editActions.count > 0
     }
+    #endif
 
     var isSelectable: Bool {
         return selection != nil
@@ -133,6 +145,20 @@ public struct Row: Hashable, Equatable {
 
     // MARK: - Initializers
 
+    #if os(tvOS)
+    public init(text: String? = nil, detailText: String? = nil, selection: Selection? = nil,
+        image: UIImage? = nil, accessory: Accessory = .None, cellClass: CellType.Type? = nil, context: Context? = nil, UUID: String = NSUUID().UUIDString) {
+        
+        self.UUID = UUID
+        self.text = text
+        self.detailText = detailText
+        self.selection = selection
+        self.image = image
+        self.accessory = accessory
+        self.cellClass = cellClass ?? Value1Cell.self
+        self.context = context
+    }
+    #else
     public init(text: String? = nil, detailText: String? = nil, selection: Selection? = nil,
         image: UIImage? = nil, accessory: Accessory = .None, cellClass: CellType.Type? = nil, context: Context? = nil, editActions: [EditAction] = [], UUID: String = NSUUID().UUIDString) {
         
@@ -145,7 +171,8 @@ public struct Row: Hashable, Equatable {
         self.cellClass = cellClass ?? Value1Cell.self
         self.context = context
         self.editActions = editActions
-    }
+    }    
+    #endif
 }
 
 
