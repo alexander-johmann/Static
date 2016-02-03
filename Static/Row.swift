@@ -43,8 +43,8 @@ public struct Row: Hashable, Equatable {
             case Checkmark: return .Checkmark
             case DetailButton(_): return .DetailButton
             default: return .None
-            #endif
             }
+            #endif
         }
 
         /// Accessory view
